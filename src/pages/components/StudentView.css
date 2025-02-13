@@ -1,0 +1,50 @@
+/* styles.css */
+
+/* Container for the whole section */
+.student-info-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 24px; /* Equivalent to p-6 in Tailwind */
+    background-color: #ffffff; /* Equivalent to bg-white */
+    border-radius: 12px; /* Equivalent to rounded-lg */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Equivalent to shadow-lg */
+  }
+  
+  /* Heading styles */
+  .student-info-container h2 {
+    font-size: 1.5rem; /* Equivalent to text-2xl */
+    font-weight: bold; /* Equivalent to font-bold */
+    margin-bottom: 16px; /* Equivalent to mb-4 */
+  }
+  
+  /* Grid layout for the student info */
+  .student-info-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Default to one column */
+    gap: 16px; /* Equivalent to gap-4 */
+  }
+  
+  /* For larger screens (lg) */
+  @media (min-width: 1024px) {
+    .student-info-grid {
+      grid-template-columns: repeat(3, 1fr); /* Three columns for large screens */
+    }
+  }
+  
+  /* Individual entry styles */
+  .student-info-item {
+    border-bottom: 1px solid #e0e0e0; /* Equivalent to border-b */
+    padding: 8px 0; /* Equivalent to py-2 */
+  }
+  
+  /* Strong text styling for keys */
+  .student-info-item strong {
+    text-transform: capitalize; /* Equivalent to capitalize */
+  }
+  
+  /* Styling for the value text */
+  .student-info-item span {
+    display: block; /* Equivalent to block */
+    color: #4a4a4a; /* Equivalent to text-gray-700 */
+  }
+  

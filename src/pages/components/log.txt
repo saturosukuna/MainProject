@@ -1,0 +1,321 @@
+import React,{useState} from 'react';
+import {  retrieveDataFromIPFS } from "./utils/ipfs";
+const Log = ({logs}) => {
+    const [logData, setLogData] = useState([]);
+    const fetchLogData = async (ipfsHash) => {
+        const data = await retrieveDataFromIPFS(ipfsHash);
+        setLogData(data);
+      }
+    return (
+        <div>
+            <h2 className="text-xl font-semibold mt-4">Logs</h2>
+
+          {logs.length > 0 ? (
+            <ul className="space-y-2">
+              {logs.map((log, index) => (
+                <li key={index} className="bg-gray-50 p-3 rounded-lg">
+                  <p className="text-gray-700">Victim: {log.victim}</p>
+                  <p className="text-gray-700">Modified By: {log.modifiedBy}</p>
+                  <button onClick={() => fetchLogData(log.ipfsHash)}
+                      className="bg-yellow-500 text-white px-4  rounded hover:bg-yellow-600 mt-2" >
+                      view
+                    </button>
+                    
+                      {Object.entries(logData).map(([key, value]) => (
+                        <div key={key} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                          <p>Old Value : {key}</p>
+                          <p>New Value : {value}</p>
+                         
+                        </div>
+                      ))}
+                    
+                  <p className="text-gray-700">
+                  Timestamp: {log.timestamp.toLocaleString()}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-700">No logs available</p>
+          )}
+        </div>
+    );
+}
+
+export default Log;
+import React, { useState } from 'react';
+import { storeDataInIPFS, retrieveDataFromIPFS, updateDataInIPFS } from "./utils/ipfs";
+const StudentForm = ({ contract, account }) => {
+  // Array for student basic educational info (20 details)
+  const [studentInfo, setStudentInfo] = useState({
+    wallet: '',
+    name: '',
+    rollNo: '',
+    class: '',
+    school: '',
+    yearOfStudy: '',
+    major: '',
+    department:'',
+    dob: '',
+    address: '',
+    contact: '',
+    email: '',
+    fatherName: '',
+    motherName: '',
+    fatherOcc: '',
+    motherOcc: '',
+    parentContact: '',
+    admissionDate: '',
+    previousSchool: '',
+    percentage: '',
+    hostelRequired: '',
+    scholarship: '',
+    remarks: '',
+  });
+
+  // Array for storing student document PDFs
+  const [documents, setDocuments] = useState({
+    photo: null,
+    aadhar: null,
+    tenthCert: null,
+    twelfthCert: null,
+    tc: null,
+    income: null,
+    community: null,
+    native: null,
+  });
+
+  // Handle input change for student info
+  const handleInfoChange = (e) => {
+    const { name, value } = e.target;
+    setStudentInfo((prevInfo) => ({
+      ...prevInfo,
+      [name]: value,
+    }));
+  };
+
+  // Handle file selection for documents
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setDocuments((prevDocuments) => ({
+      ...prevDocuments,
+      [name]: files[0], // Store only the first selected file
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('Student Info:', studentInfo);
+    console.log('Uploaded Documents:', documents);
+    try {
+        const ipfsHash = await storeDataInIPFS(studentInfo);
+        const docHash = await storeDataInIPFS(documents);
+        await contract.methods
+            .addStudent(studentInfo.wallet, ipfsHash, docHash, studentInfo.rollNo)
+            .send({ from: account });
+        alert("Student added successfully!");
+    } catch (error) {
+        console.error("Error adding student:", error);
+        alert("Failed to add student.");
+    }
+  };
+
+  const documentNames = [
+    { label: 'Photo', name: 'photo' },
+    { label: 'Aadhar', name: 'aadhar' },
+    { label: '10th Certificate', name: 'tenthCert' },
+    { label: '12th Certificate', name: 'twelfthCert' },
+    { label: 'Transfer Certificate', name: 'tc' },
+    { label: 'Income Certificate', name: 'income' },
+    { label: 'Community Certificate', name: 'community' },
+    { label: 'Native Certificate', name: 'native' },
+  ];
+
+  return (
+    <>
+    <form onSubmit={handleSubmit} className="max-w-full mx-auto p-6 border rounded-lg shadow-lg space-y-6 bg-white">
+  <h2 className="text-2xl text-center font-bold">Student Information Form</h2>
+
+  {/* Student Info Grid */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {Object.keys(studentInfo).map((key) =>
+      key !== "documents" && (
+        <div key={key} className="flex flex-col">
+          <label className="text-sm font-medium">{key.replace(/([A-Z])/g, " $1").toUpperCase()}</label>
+          <input
+            type="text"
+            name={key}
+            value={studentInfo[key] || ""}
+            onChange={handleInfoChange}
+            className="border px-2 py-1 rounded"
+            required
+          />
+        </div>
+      )
+    )}
+  </div>
+
+  {/* Document Upload Grid */}
+  <h3 className="text-lg font-semibold mt-4">Upload Documents</h3>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {documentNames.map((doc) => (
+      <div key={doc.name} className="flex flex-col">
+        <label className="text-sm font-medium">Upload {doc.label} (PDF)</label>
+        <input
+          type="file"
+          name={doc.name}
+          onChange={handleFileChange}
+          accept=".pdf"
+          className="border px-2 py-1 rounded"
+        />
+        {documents[doc.name] && (
+          <p className="mt-2 text-sm text-gray-600">{documents[doc.name].name}</p>
+        )}
+      </div>
+    ))}
+  </div>
+
+  {/* Submit Button */}
+  <div className="flex justify-center">
+    <button type="submit" className="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600">
+      Submit
+    </button>
+  </div>
+</form>
+
+    
+    </>
+  );
+};
+
+export default StudentForm;
+import React, { useState } from 'react';
+import { storeDataInIPFS, retrieveDataFromIPFS, updateDataInIPFS } from "./utils/ipfs";
+
+const StaffForm = ({contract,account}) => {
+  // Array for staff basic personal and professional info (10 details)
+  const [staffInfo, setStaffInfo] = useState({
+    wallet:'',
+    name: '',
+    employeeId: '',
+    department: '',
+    designation: '',
+    dob: '',
+    address: '',
+    contact: '',
+    email: '',
+    fatherName: '',
+    motherName: '',
+    fatherOcc: '',
+    motherOcc: '',
+    joiningDate: '',
+    salary: '',
+    remarks: '',
+  });
+
+  // Array for storing staff document PDFs
+  const [documents, setDocuments] = useState({
+    photo: null,
+    aadhar: null,
+    resume: null,
+    qualification: null,
+    experience: null,
+  });
+
+  // Handle input change for staff info
+  const handleInfoChange = (e) => {
+    const { name, value } = e.target;
+    setStaffInfo((prevInfo) => ({
+      ...prevInfo,
+      [name]: value,
+    }));
+  };
+
+  // Handle file selection for documents
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setDocuments((prevDocuments) => ({
+      ...prevDocuments,
+      [name]: files[0], // Store only the first selected file
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('Staff Info:', staffInfo);
+    console.log('Uploaded Documents:', documents);
+    try {
+        const ipfsHash = await storeDataInIPFS(staffInfo);
+        const docHash = await storeDataInIPFS(documents);
+        await contract.methods
+            .addStaff(staffInfo.wallet, ipfsHash, docHash,staffInfo.employeeId)
+            .send({ from: account });
+            alert("Staff added successfully!");
+        } catch (error) {
+            console.error("Error adding student:", error);
+            alert("Failed to add student.");
+        }
+  };
+
+  const documentNames = [
+    { label: 'Photo', name: 'photo' },
+    { label: 'Aadhar', name: 'aadhar' },
+    { label: 'Resume', name: 'resume' },
+    { label: 'Qualification Certificate', name: 'qualification' },
+    { label: 'Experience Certificate', name: 'experience' },
+  ];
+
+  return (
+    <>
+    <form onSubmit={handleSubmit} className="max-w-full mx-auto p-6 border rounded-lg shadow-lg space-y-6 bg-white">
+      <h2 className="text-2xl text-center font-bold">Staff Information Form</h2>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Staff Info */}
+      {Object.keys(staffInfo).map((key) => (
+        <div key={key} className="flex flex-col">
+          <label className="text-sm font-medium">{key.replace(/([A-Z])/g, ' $1').toUpperCase()}</label>
+          <input
+            type="text"
+            name={key}
+            value={staffInfo[key]}
+            onChange={handleInfoChange}
+            className="border px-2 py-1 rounded"
+            required
+          />
+        </div>
+      ))}
+      </div>
+
+      {/* Document Upload */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {documentNames.map((doc) => (
+        <div key={doc.name} className="flex flex-col">
+          <label className="text-sm font-medium">Upload {doc.label} (PDF)</label>
+          <input
+            type="file"
+            name={doc.name}
+            onChange={handleFileChange}
+            accept=".pdf"
+            className="border px-2 py-1 rounded"
+          />
+          {documents[doc.name] && <p className="mt-2 text-sm text-gray-600">{documents[doc.name].name}</p>}
+        </div>
+      ))}
+      </div>
+
+      {/* Submit Button */}
+      <div className="flex justify-center">
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+          Submit
+        </button>
+      </div>
+    </form>
+    
+    </>
+  );
+};
+
+export default StaffForm;
