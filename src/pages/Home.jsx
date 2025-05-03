@@ -2,6 +2,10 @@ import React from "react";
 import AboutPage from "./AboutPage";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
+import MapPage from "./MapPage";
+import Footer from "./components/Footer";
+
+
 
 const Home = () => {
   return (
@@ -55,12 +59,9 @@ const Home = () => {
          <h1 className="text-4xl text-center text-green p-4 ">Department Of Information Technology</h1>
           <h2 className="text-center text-3xl font-bold mb-6">Our Best Categories, that we teach our student about basic Technologies</h2>
           <div className="flex justify-center">
-            <button
-              onClick={() => navigate('/about')}
-              className="px-6 py-3 bg-green-900 text-white rounded-full shadow-md hover:bg-green-700"
-            >
-              Know More
-            </button>
+          <NavLink to="/department" className="px-6 py-3 bg-green-900 text-white rounded-full shadow-md hover:bg-green-700">
+               Know More
+            </NavLink>
           </div>
           <div className="max-w-full mx-auto p-6 rounded-lg shadow-lg space-y-6 bg-white">
             <div className="grid grid-cols-3 gap-6 mt-10 max-w-2xl mx-auto">
@@ -93,6 +94,8 @@ const Home = () => {
         </motion.section>
       </div>
       <AboutPage />
+      <MapPage />
+      <Footer />
     </>
   );
 };

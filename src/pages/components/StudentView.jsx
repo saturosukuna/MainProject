@@ -1,8 +1,11 @@
-import React, { useRef } from "react";
+import React, { useRef,useState } from "react";
 import html2pdf from 'html2pdf.js';
+import { PDFViewer, PDFDownloadLink  } from '@react-pdf/renderer';
+import InfoPDF from './reactpdfformat';
 import './StudentView.css'
 const StudentInfoDisplay = ({ studentInfo, documents }) => {
   const contentRef = useRef();
+  const [showViewer, setShowViewer] = useState(false);
   const downloadData = () => {
     const element = contentRef.current;
     console.log("called");
@@ -54,19 +57,63 @@ const StudentInfoDisplay = ({ studentInfo, documents }) => {
       </div>
 
       <button onClick={downloadData} className="mt-4 p-2 bg-blue-500 text-white rounded">
-        Download as PDF
+        Save As Screenshot
       </button>
+      <div className="py-4">
+      <button
+        onClick={() => setShowViewer(!showViewer)}
+        style={{
+          marginRight: '10px',
+          padding: '8px 16px',
+          backgroundColor: '#2c3e50',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '4px',
+        }}
+      >
+        {showViewer ? 'Hide PDF' : 'View PDF'}
+      </button>
+
+      <PDFDownloadLink
+        document={<InfoPDF Info={studentInfo} />} 
+        fileName="student-info.pdf"
+        style={{
+          padding: '8px 16px',
+          backgroundColor: '#27ae60',
+          color: '#fff',
+          textDecoration: 'none',
+          borderRadius: '4px',
+        }}
+      >
+        {({ loading }) => (loading ? 'Preparing...' : 'Download PDF')}
+      </PDFDownloadLink>
+
+      {showViewer && (
+        <div style={{ marginTop: '20px' }}>
+          <PDFViewer style={{ width: '100%', height: '90vh' }}>
+            <InfoPDF Info={studentInfo} /> 
+          </PDFViewer>
+        </div>
+      )}
+    </div>
       <h2 className="text-2xl font-bold mt-6 mb-4">Documents</h2>
-      <div className="grid grid-cols-1  lg:grid-cols-3 gap-4">
-        {Object.entries(documents).map(([key, value]) => (
-          <div key={key} className="border-b py-2">
-            <strong className="capitalize">{key.replace(/([A-Z])/g, ' $1')}:</strong>
-            <span className="block text-gray-700">{value ? "Uploaded" : "Not Provided"}</span>
-            <iframe src={`data:application/pdf;base64,${value}`} width="100%" height="500px"></iframe>
-            <button onClick={() => downloadPDF(value)}>Download PDF</button>
-          </div>
-        ))}
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 p-5">
+  {Object.entries(documents).map(([key, value]) => (
+    <div key={key} className="border-b py-2">
+      <strong className="capitalize">{key.replace(/([A-Z])/g, ' $1')}:</strong>
+      {value ? (
+        <>
+          <span className="block text-gray-700">Uploaded</span>
+          <iframe src={`data:application/pdf;base64,${value}`} width="100%" height="500px"></iframe>
+          <button onClick={() => downloadPDF(value)}>Download PDF</button>
+        </>
+      ) : (
+        <span className="block text-gray-700">Not Provided</span>
+      )}
+    </div>
+  ))}
+</div>
+
     </div>
   );
 };

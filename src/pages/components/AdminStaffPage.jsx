@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import StaffInfoDisplay from "./Staffview";
 import { storeDataInIPFS, retrieveDataFromIPFS, updateDataInIPFS } from "./utils/ipfs";
-import StaffUpdateForm from "./staffUpdateForm";
+import StaffUpdateForm from "./StaffUpdateForm";
 import Log from "./Log";
 const AdminStaffPage = ({ contract, account }) => {
     const [employeeID, setEmployeeId] = useState("");
     const [staffInfo, setStaffInfo] = useState(null);
     const [documents, setDocuments] = useState({});
     const [logs, setLogs] = useState([]);
+    const [isOpenModal, setIsOpenModal] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
 
     const checkAdmin = async () => {
@@ -50,6 +51,7 @@ const AdminStaffPage = ({ contract, account }) => {
         try {
             const logs = await contract.methods.getLogs(victimAddress).call();
             setLogs(logs);
+            setIsOpenModal(true);
         } catch (error) {
             console.error("Error fetching logs:", error);
         }
@@ -74,13 +76,13 @@ const AdminStaffPage = ({ contract, account }) => {
 
             {staffInfo && (
                 <>
+                    <StaffUpdateForm contract={contract} account={account} staffInfo={staffInfo} documents={documents} isAdmin={isAdmin} />
                     <StaffInfoDisplay staffInfo={staffInfo} documents={documents} />
                     <button onClick={() => fetchLogs(staffInfo.wallet)}
                         className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 mt-2" >
                         Get Logs
                     </button>
-                    <Log logs={logs} />
-                    <StaffUpdateForm contract={contract} account={account} staffInfo={staffInfo} documents={documents} isAdmin={isAdmin} />
+                    <Log logs={logs} isOpenModal={isOpenModal} onClose={() => setIsOpenModal(false)} />
                 </>
             )}
 

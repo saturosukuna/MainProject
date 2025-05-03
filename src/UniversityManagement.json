@@ -31801,12 +31801,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x43836C17824625b90A7b5cB055Ad546725B85e6a",
-      "transactionHash": "0x74d68c496397122491470443ab9fd7fc5e78e23e1607beb41c060720afa1a81d"
+      "address": "0x2Afa8E856AbE1dc1e2deF859dd0663ee86813A05",
+      "transactionHash": "0xff2f2b2b8e3f7fa7048e1844605bc8bcb7a1f2b2d946645137dd1cae6d8ec5cd"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2025-02-12T09:17:50.361Z",
+  "updatedAt": "2025-03-30T08:37:13.754Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

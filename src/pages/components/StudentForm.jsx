@@ -146,63 +146,63 @@ const StudentForm = ({ contract, account }) => {
 
   return (
     <form
-      onSubmit={handleSubmit}
-      className="max-w-full mx-auto p-6 border rounded-lg shadow-lg space-y-6 bg-white"
-    >
-      <h2 className="text-2xl text-green-700 text-center font-bold">Student Information Form</h2>
-
-      {/* Student Info Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {Object.keys(studentInfo).map((key) => (
-          <div key={key} className="flex flex-col">
-            <label className="text-sm  font-medium">
-              {key.replace(/([A-Z])/g, " $1").toUpperCase()}
-            </label>
-            <input
-              type={getInputType(key)}
-              name={key}
-              value={
-                typeof studentInfo[key] === "boolean" ? undefined : studentInfo[key]
-              }
-              checked={typeof studentInfo[key] === "boolean" ? studentInfo[key] : undefined}
-              onChange={handleInfoChange}
-              className={getInputClass(getInputType(key))}
-
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Document Upload Grid */}
-      <h3 className="text-lg font-semibold mt-4">Upload Documents</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    onSubmit={handleSubmit}
+    className="max-w-6xl mx-auto p-8 border border-gray-200 rounded-2xl shadow-xl space-y-8 bg-white"
+  >
+    <h2 className="text-3xl text-center text-green-700 font-bold">Student Information Form</h2>
+  
+    {/* Student Info Grid */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {Object.keys(studentInfo).map((key) => (
+        <div key={key} className="flex flex-col">
+          <label className="text-sm text-gray-700 font-medium mb-1">
+            {key.replace(/([A-Z])/g, " $1").toUpperCase()}
+          </label>
+          <input
+            type={getInputType(key)}
+            name={key}
+            value={typeof studentInfo[key] === "boolean" ? undefined : studentInfo[key]}
+            checked={typeof studentInfo[key] === "boolean" ? studentInfo[key] : undefined}
+            onChange={handleInfoChange}
+            className={`px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 ${getInputClass(getInputType(key))}`}
+          />
+        </div>
+      ))}
+    </div>
+  
+    {/* Document Upload Grid */}
+    <div className="space-y-4">
+      <h3 className="text-xl font-semibold text-gray-800">Upload Documents</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {documentNames.map((doc) => (
           <div key={doc.name} className="flex flex-col">
-            <label className="text-sm font-medium">Upload {doc.label} (PDF)</label>
+            <label className="text-sm font-medium text-gray-700 mb-1">Upload {doc.label} (PDF)</label>
             <input
               type="file"
               name={doc.name}
               onChange={handleFileChange}
               accept=".pdf"
-              className="border px-2 py-1 rounded"
+              className="border border-gray-300 px-3 py-2 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             {documents[doc.name] && (
-              <p className="mt-2 text-sm text-gray-600">{documents[doc.name].name}</p>
+              <p className="mt-1 text-sm text-gray-500 truncate">{documents[doc.name].name}</p>
             )}
           </div>
         ))}
       </div>
-
-      {/* Submit Button */}
-      <div className="flex justify-center">
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-600"
-        >
-          Submit
-        </button>
-      </div>
-    </form>
+    </div>
+  
+    {/* Submit Button */}
+    <div className="flex justify-center">
+      <button
+        type="submit"
+        className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition duration-300 shadow-md hover:shadow-lg"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+  
   );
 };
 

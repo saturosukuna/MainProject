@@ -8,7 +8,7 @@ const StudentPage = ({ contract, account }) => {
   const [documents, setDocuments] = useState({});
   const [isAdmin, setIsAdmin] = useState(false);
   const [logs, setLogs] = useState([]);
-
+  const [isOpenModal, setIsOpenModal] = useState(false);
   useEffect(() => {
     if (contract && account) {
       fetchStudent();
@@ -42,6 +42,7 @@ const StudentPage = ({ contract, account }) => {
     try {
         const logs = await contract.methods.getLogs(victimAddress).call();
         setLogs(logs);
+        setIsOpenModal(true);
     } catch (error) {
         console.error("Error fetching logs:", error);
     }
@@ -50,16 +51,14 @@ const StudentPage = ({ contract, account }) => {
 
   return (
     <div className="mt-24">
+      <StudentUpdateForm contract={contract} account={account} studentInfo={studentInfo} documents={documents} isAdmin={isAdmin} />
       <StudentInfoDisplay studentInfo={studentInfo} documents={documents} />
       <button onClick={() => fetchLogs(studentInfo.wallet)}
                       className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 mt-2" >
                       Get Logs
       </button>
       
-      <Log logs={logs} />         
-          
-      <StudentUpdateForm contract={contract} account={account} studentInfo={studentInfo} documents={documents} isAdmin={isAdmin} />
-      
+      <Log logs={logs} isOpenModal={isOpenModal} onClose={() => setIsOpenModal(false)} />      
     </div>
   );
 };

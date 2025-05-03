@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { storeDataInIPFS, retrieveDataFromIPFS, updateDataInIPFS } from "./utils/ipfs";
+
 const StaffUpdateForm = ({ contract, account, staffInfo, documents, isAdmin }) => {
   const [updatedStaffInfo, setUpdatedStaffInfo] = useState({});
   const [updatedDocuments, setUpdatedDocuments] = useState({});
@@ -129,50 +130,57 @@ const StaffUpdateForm = ({ contract, account, staffInfo, documents, isAdmin }) =
     }
   };
   return (
-    <div>
-      <div className="max-w-full mx-auto p-6 mt-4 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center ">
-        <h1 className="text-2xl font-semibold text-black text-center mb-4">
-          Open the Form If You Need to Update the Data
-        </h1>
+<div>
+<div className="max-w-full mx-auto p-6 mt-4 bg-white rounded-lg shadow-lg">
+  <button
+    onClick={() => setIsFormVisible(true)}
+    className="bg-green-600 text-white px-6 py-2 rounded-md shadow-md transition hover:bg-green-700"
+  >
+    Edit Form
+  </button>
+</div>
+
+
+  {/* Modal */}
+  {isFormVisible && (
+    <div className="fixed inset-0 z-50 backdrop-blur-sm bg-opacity-50 flex items-center justify-center">
+      <div className="bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 rounded-lg shadow-xl relative animate-fade-in">
+        {/* Close Button */}
         <button
-          onClick={() => setIsFormVisible(!isFormVisible)}
-          className="bg-blue-500 text-white px-6 py-2 rounded-md flex items-center gap-2 shadow-md transition hover:bg-blue-600 "
+          onClick={() => setIsFormVisible(false)}
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl font-bold"
         >
-          {isFormVisible ? (
-            "Close"
-          ) : (
-            "Open"
-          )}
+          &times;
         </button>
-      </div>
-      {isFormVisible && (
-        <form onSubmit={handleSubmit} className="max-w-full mt-6 mx-auto p-4 border-4 border-green-700 rounded shadow-lg space-y-4">
-          <h2 className="text-2xl text-green-700 text-center py-2 font-bold">Update Staff Information</h2>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <h2 className="text-2xl text-green-700 text-center font-bold">Update Staff Information</h2>
+
           {Object.entries(updatedStaffInfo).map(([key, value]) => (
-            <div key={key} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <label className="text-sm font-medium text-green-700 ">{key.replace(/([A-Z])/g, " $1").toUpperCase()}</label>
+            <div key={key} className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-center">
+              <label className="text-sm font-medium text-green-700">
+                {key.replace(/([A-Z])/g, " $1").toUpperCase()}
+              </label>
               <input
                 type={getInputType(key)}
                 name={key}
-                value={
-                  typeof updatedStaffInfo[key] === "boolean" ? undefined : updatedStaffInfo[key]
-                }
+                value={typeof updatedStaffInfo[key] === "boolean" ? undefined : updatedStaffInfo[key]}
                 checked={["good"].includes(updatedStaffInfo[key])}
                 onChange={handleInfoChange}
                 className={getInputClass(getInputType(key))}
-
                 disabled={!isAdmin && key === "salary"}
               />
             </div>
           ))}
 
-
           {isAdmin && (
             <>
-              <h3 className="text-xl font-bold mt-4 text-green-700 ">Update Documents</h3>
+              <h3 className="text-lg font-semibold text-green-700 mt-4">Update Documents</h3>
               {Object.keys(updatedDocuments).map((doc) => (
                 <div key={doc} className="flex flex-col">
-                  <label className="text-sm font-medium text-green-700 ">Upload {doc.replace(/([A-Z])/g, " $1")}</label>
+                  <label className="text-sm font-medium text-green-700">
+                    Upload {doc.replace(/([A-Z])/g, " $1")}
+                  </label>
                   <input
                     type="file"
                     name={doc}
@@ -186,11 +194,16 @@ const StaffUpdateForm = ({ contract, account, staffInfo, documents, isAdmin }) =
           )}
 
           <div className="flex justify-center">
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Update</button>
+            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow-md">
+              Update
+            </button>
           </div>
         </form>
-      )}
+      </div>
     </div>
+  )}
+</div>
+
   );
 }
 

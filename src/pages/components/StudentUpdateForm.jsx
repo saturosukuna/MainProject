@@ -134,48 +134,60 @@ const StudentUpdateForm = ({ contract, account, studentInfo, documents, isAdmin 
 
   return (
     <div>
-      <div className="max-w-full mt-6 mx-auto p-6 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center ">
-        <h1 className="text-2xl font-semibold text-black text-center mb-4">
-          Open the Form If You Need to Update the Data
-        </h1>
+  {/* Trigger Button */}
+  <div className="mt-6 mx-auto p-6 bg-white rounded-lg shadow-lg">
+  <button
+    onClick={() => setIsFormVisible(true)}
+    className="bg-green-600 text-white px-6 py-2 rounded-md shadow-md transition hover:bg-green-700"
+  >
+    Edit Form
+  </button>
+</div>
+
+
+  {/* Modal */}
+  {isFormVisible && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center  bg-opacity-50 backdrop-blur-sm">
+      <div className="bg-white max-w-4xl w-full mx-4 p-6 rounded-lg shadow-xl relative overflow-y-auto max-h-[90vh]">
+        
+        {/* Close Button */}
         <button
-          onClick={() => setIsFormVisible(!isFormVisible)}
-          className="bg-blue-500 text-white px-6 py-2 rounded-md flex items-center gap-2 shadow-md transition hover:bg-blue-600"
+          onClick={() => setIsFormVisible(false)}
+          className="absolute top-3 right-3 text-gray-600 hover:text-red-600 text-xl font-bold"
         >
-          {isFormVisible ? (
-            "Close"
-          ) : (
-            "Open"
-          )}
+          &times;
         </button>
-      </div>
-      {isFormVisible && (
-        <form onSubmit={handleSubmit} className="max-w-full mt-6 mx-auto p-4 border-4 border-green-700 rounded shadow-lg space-y-4">
-          <h2 className="text-2xl text-green-700 text-center py-2 font-bold">Update Student Information</h2>
-          {Object.entries(updatedStudentInfo).map(([key, value]) => (
-            <div key={key} className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <label className="text-sm text-green-700 font-medium">{key.replace(/([A-Z])/g, " $1").toUpperCase()}</label>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <h2 className="text-2xl text-green-700 text-center font-bold mb-4">
+            Update Student Information
+          </h2>
+
+          {Object.entries(updatedStudentInfo).map(([key]) => (
+            <div key={key} className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-center">
+              <label className="text-sm text-green-700 font-medium">
+                {key.replace(/([A-Z])/g, " $1").toUpperCase()}
+              </label>
               <input
                 type={getInputType(key)}
                 name={key}
-                value={
-                  typeof updatedStudentInfo[key] === "boolean" ? undefined : updatedStudentInfo[key]
-                }
+                value={typeof updatedStudentInfo[key] === "boolean" ? undefined : updatedStudentInfo[key]}
                 checked={["Yes", "Hostel", "bad"].includes(updatedStudentInfo[key])}
                 onChange={handleInfoChange}
                 className={getInputClass(getInputType(key))}
-
                 disabled={!isAdmin && key === "percentage"}
               />
             </div>
           ))}
+
           {isAdmin && (
             <>
               <h3 className="text-xl text-green-700 font-bold mt-4">Update Documents</h3>
-
               {Object.keys(updatedDocuments).map((doc) => (
                 <div key={doc} className="flex flex-col">
-                  <label className="text-sm text-green-700 font-medium">Upload {doc.replace(/([A-Z])/g, " $1")}</label>
+                  <label className="text-sm text-green-700 font-medium">
+                    Upload {doc.replace(/([A-Z])/g, " $1")}
+                  </label>
                   <input
                     type="file"
                     name={doc}
@@ -183,16 +195,22 @@ const StudentUpdateForm = ({ contract, account, studentInfo, documents, isAdmin 
                     accept=".pdf"
                     className="border px-2 py-1 rounded"
                   />
-                </div>      
+                </div>
               ))}
             </>
           )}
+
           <div className="flex justify-center">
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Update</button>
+            <button type="submit" className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">
+              Update
+            </button>
           </div>
         </form>
-      )}
+      </div>
     </div>
+  )}
+</div>
+
   );
 }
 

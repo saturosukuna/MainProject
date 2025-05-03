@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import StudentForm from './components/StudentForm';
 import StaffForm from './components/StaffForm';
 import AdminStaffPage from './components/AdminStaffPage';
@@ -6,6 +6,21 @@ import AdminStudentPage from './components/AdminStudentPage';
 
 const AdminPage = ({ contract, account }) => {
     const [selectedMenu, setSelectedMenu] = useState("registerStudent");
+
+    // Load the saved menu from localStorage on component mount
+    useEffect(() => {
+        const savedMenu = localStorage.getItem("selectedMenu");
+        if (savedMenu) {
+            setSelectedMenu(savedMenu);
+        }
+    }, []);
+
+    // Save the selected menu to localStorage whenever it changes
+    useEffect(() => {
+        if (selectedMenu) {
+            localStorage.setItem("selectedMenu", selectedMenu);
+        }
+    }, [selectedMenu]);
 
     // Function to determine active button styling
     const getButtonClass = (menu) => {

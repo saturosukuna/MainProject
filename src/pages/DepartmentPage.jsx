@@ -13,7 +13,20 @@ const staffDetails = [
     photo: "https://annamalaiuniversity.ac.in/assets/staff_photos/00649.jpg",
     contact: "vscseau@gmail.com",
     phone: "+91 9486802102",
-  },{
+  },
+  {
+    name: "Dr. K. Selvakumar",
+    designation: "professor & Head",
+    dept: "Information Technology",
+    qualification: " B.E.,M.E.,Ph.D.,",
+    dateOfJoin:"1999-07-15",
+    dob:"1968-07-01",
+    address:"No.82/60 New St.,(Puthu Theru) Chidambaram - 608 001",
+    photo: "https://annamalaiuniversity.ac.in/assets/staff_photos/04274.jpg",
+    contact: "kskaucse@gmail.com",
+    phone: "+91 9443185363",
+  },
+  {
     name: "Dr. J. Jothilakshmi",
     designation: "professor",
     dept: "Information Technology",
@@ -36,6 +49,30 @@ const staffDetails = [
     photo: "https://annamalaiuniversity.ac.in/assets/staff_photos/04062.jpg",
     contact: "sasikala.au@gmail.com",
     phone: "+91 9944481791",
+  },
+  {
+    name: "Dr. K. Jagan Mohan",
+    designation: "Associate Professor",
+    dept: "Information Technology",
+    qualification: " B.E.,M.E.,Ph.D.,",
+    dateOfJoin:"1999-12-15",
+    dob:"1976-05-04",
+    address:"No:10, Abiramapuram,Ezhil Nagar,Thanjavur - 613 007",
+    photo: "https://annamalaiuniversity.ac.in/assets/staff_photos/08127.jpg",
+    contact: "jagan_banu@yahoo.com",
+    phone: "+91 9443921055",
+  },
+  {
+    name: "Dr. K. Suban",
+    designation: "Associate Professor",
+    dept: "Information Technology",
+    qualification: " B.E.[IT], M.E.[CSE].,Ph.D.,",
+    dateOfJoin:"2003-09-05",
+    dob:"1982-03-14",
+    address:"32/58, Malai Katti Street, Chidambaram - 608 001.",
+    photo: "https://annamalaiuniversity.ac.in/assets/staff_photos/09286.jpg",
+    contact: "rsuban82@gmail.com",
+    phone: "+91 9443222241",
   }
   
 ];

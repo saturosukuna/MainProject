@@ -9,6 +9,7 @@ const AdminStudentPage = ({ contract, account }) => {
     const [documents, setDocuments] = useState({});
     const [isAdmin, setIsAdmin] = useState(false);
     const [logs, setLogs] = useState([]);
+    const [isOpenModal, setIsOpenModal] = useState(false);
     const checkAdmin = async () => {
         try {
             const adminStatus = await contract.methods.isAdmin(account).call({ from: account });
@@ -27,6 +28,7 @@ const AdminStudentPage = ({ contract, account }) => {
     const fetchStudent = async () => {
         try {
             const student = await contract.methods.getStudentByRollNo(rollNo).call({ from: account });
+            console.log(student.ipfsHash);
             if (student.wallet !== "0x0000000000000000000000000000000000000000") {
                 const ipfsHash = await retrieveDataFromIPFS(student.ipfsHash);
                 const docHash = await retrieveDataFromIPFS(student.docHash);
@@ -51,6 +53,7 @@ const AdminStudentPage = ({ contract, account }) => {
         try {
             const logs = await contract.methods.getLogs(victimAddress).call();
             setLogs(logs);
+            setIsOpenModal(true);
         } catch (error) {
             console.error("Error fetching logs:", error);
         }
@@ -78,13 +81,13 @@ const AdminStudentPage = ({ contract, account }) => {
 
             {Object.keys(studentInfo).length > 0 && (
                 <>
+                    <StudentUpdateForm contract={contract} account={account} studentInfo={studentInfo} documents={documents} isAdmin={isAdmin} />
                     <StudentInfoDisplay studentInfo={studentInfo} documents={documents} />
                     <button onClick={() => fetchLogs(studentInfo.wallet)}
                         className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 mt-2" >
                         Get Logs
                     </button>
-                    <Log logs={logs} />
-                    <StudentUpdateForm contract={contract} account={account} studentInfo={studentInfo} documents={documents} isAdmin={isAdmin} />
+                    <Log logs={logs} isOpenModal={isOpenModal} onClose={() => setIsOpenModal(false)} />
                 </>
             )}
         </div>

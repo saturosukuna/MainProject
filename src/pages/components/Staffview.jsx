@@ -1,8 +1,11 @@
-import React, { useRef } from "react";
+import React, { useRef,useState } from "react";
 import html2pdf from 'html2pdf.js';
+import { PDFViewer, PDFDownloadLink  } from '@react-pdf/renderer';
+import InfoPDF from './reactpdfformat';
 
 const StaffInfoDisplay = ({ staffInfo, documents }) => {
   const contentRef = useRef();
+  const [showViewer, setShowViewer] = useState(false);
   const downloadData = () => {
     const element = contentRef.current;
     html2pdf()
@@ -50,8 +53,45 @@ const StaffInfoDisplay = ({ staffInfo, documents }) => {
       </div>
 
       <button onClick={downloadData} className="mt-4 p-2 bg-blue-500 text-white rounded">
-        Download as PDF
+        Save As Screenshot
       </button>
+      <div className="py-4">
+      <button
+        onClick={() => setShowViewer(!showViewer)}
+        style={{
+          marginRight: '10px',
+          padding: '8px 16px',
+          backgroundColor: '#2c3e50',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '4px',
+        }}
+      >
+        {showViewer ? 'Hide PDF' : 'View PDF'}
+      </button>
+
+      <PDFDownloadLink
+        document={<InfoPDF Info={staffInfo} />} 
+        fileName="student-info.pdf"
+        style={{
+          padding: '8px 16px',
+          backgroundColor: '#27ae60',
+          color: '#fff',
+          textDecoration: 'none',
+          borderRadius: '4px',
+        }}
+      >
+        {({ loading }) => (loading ? 'Preparing...' : 'Download As PDF')}
+      </PDFDownloadLink>
+
+      {showViewer && (
+        <div style={{ marginTop: '20px' }}>
+          <PDFViewer style={{ width: '100%', height: '90vh' }}>
+            <InfoPDF Info={staffInfo} /> 
+          </PDFViewer>
+        </div>
+      )}
+    </div>
 
       <h2 className="text-2xl font-bold mt-6 mb-4">Documents</h2>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
