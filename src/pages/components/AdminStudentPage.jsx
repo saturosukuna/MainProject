@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import StudentInfoDisplay from "./StudentView";
 import { storeDataInIPFS, retrieveDataFromIPFS, updateDataInIPFS } from "./utils/ipfs";
+import { toast } from 'react-toastify';
 import StudentUpdateForm from "./studentUpdateForm";
 import Log from "./Log";
 const AdminStudentPage = ({ contract, account }) => {
     const [rollNo, setRollNo] = useState("");
     const [studentInfo, setStudentInfo] = useState({});
     const [documents, setDocuments] = useState({});
+    const [academicMarks, setAcademicMarks] = useState({});
     const [isAdmin, setIsAdmin] = useState(false);
     const [logs, setLogs] = useState([]);
     const [isOpenModal, setIsOpenModal] = useState(false);
@@ -31,18 +33,21 @@ const AdminStudentPage = ({ contract, account }) => {
             console.log(student.ipfsHash);
             if (student.wallet !== "0x0000000000000000000000000000000000000000") {
                 const ipfsHash = await retrieveDataFromIPFS(student.ipfsHash);
+                const marksHash = await retrieveDataFromIPFS(student.acadHash);
                 const docHash = await retrieveDataFromIPFS(student.docHash);
 
                 setStudentInfo(ipfsHash || {});
+                setAcademicMarks(marksHash || {});
                 setDocuments(docHash || {});
                 console.log(documents);
+                toast.success("Student details fetched successfully.");
 
             } else {
-                alert("No student found with this roll number.");
+                toast.warning("No student found with this roll number.");
             }
         } catch (error) {
             console.error("Error fetching student data:", error);
-            alert("Failed to fetch student details.");
+            toast.error("Failed to fetch student details.");
         }
     };
 
@@ -81,8 +86,8 @@ const AdminStudentPage = ({ contract, account }) => {
 
             {Object.keys(studentInfo).length > 0 && (
                 <>
-                    <StudentUpdateForm contract={contract} account={account} studentInfo={studentInfo} documents={documents} isAdmin={isAdmin} />
-                    <StudentInfoDisplay studentInfo={studentInfo} documents={documents} />
+                    <StudentUpdateForm contract={contract} account={account} studentInfo={studentInfo} academicMarks={academicMarks} documents={documents} isAdmin={isAdmin} fetchStudent={fetchStudent} />
+                    <StudentInfoDisplay studentInfo={studentInfo} academicMarks={academicMarks} documents={documents} />
                     <button onClick={() => fetchLogs(studentInfo.wallet)}
                         className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 mt-2" >
                         Get Logs

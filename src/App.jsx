@@ -12,6 +12,7 @@ import ContactPage from "./pages/ContactPage";
 import Header from "./pages/components/Header";
 import Home from "./pages/Home";
 import "./index.css";
+import ScrollToTop from "./pages/components/ScrollToTop";
 
 const App = () => {
   const [web3, setWeb3] = useState(null);
@@ -124,6 +125,7 @@ const App = () => {
   return (
     <div className="mt-20">
       <Router>
+        <ScrollToTop />
         <Header isConnected={isConnected} connectWallet={connectWallet} disconnectWallet={disconnectWallet} role={role} />
 
 

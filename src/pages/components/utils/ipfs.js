@@ -31,7 +31,7 @@ export async function updateDataInIPFS(cid, newData) {
       const response = await axios.put(`${API_BASE_URL}/update/${cid}`, newData, {
           headers: { 'Content-Type': 'application/json' }
       });
-      
+      console.log(newData);
       return response.data.cid; // Return the new CID
 
   } catch (error) {

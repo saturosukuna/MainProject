@@ -69,21 +69,22 @@ const Header = ({ role, isConnected, connectWallet, disconnectWallet }) => {
           )}
 
           {/* Wallet Connection Button */}
-          {isConnected ? (
-            <button
-              className="bg-red-600 px-2 rounded-lg h-7 hover:bg-red-500 transition duration-300"
-              onClick={disconnectWallet}
-            >
-              Disconnect Wallet
-            </button>
-          ) : (
-            <button
-              className="bg-blue-600 px-2 rounded-lg hover:bg-blue-500 transition duration-300"
-              onClick={connectWallet}
-            >
-              Connect Wallet
-            </button>
-          )}
+{isConnected ? (
+  <button
+    className="bg-red-600 h-9 px-4 hover:bg-red-500 transition duration-300 rounded-none"
+    onClick={disconnectWallet}
+  >
+    Disconnect Wallet
+  </button>
+) : (
+  <button
+    className="bg-blue-600 h-9 px-4 hover:bg-blue-500 transition duration-300 rounded-none"
+    onClick={connectWallet}
+  >
+    Connect Wallet
+  </button>
+)}
+
 
         </nav>
 

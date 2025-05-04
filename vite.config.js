@@ -5,17 +5,18 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/MainProject/',
+  // base: '/MainProject/',
   plugins: [
     tailwindcss(),
     react()],
-    
-})
- // build: {
+    // build: {
     //   outDir: path.resolve(__dirname, 'backend/dist'), 
     //   chunkSizeWarningLimit: 1600,// Output build to backend folder
     //   emptyOutDir: true
     // },
+    
+})
+ 
     // server: {
     //   proxy: {
     //     '/api': 'http://localhost:5000' // Proxy API requests to Express

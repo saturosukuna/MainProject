@@ -18,7 +18,7 @@ const AboutPage = () => {
 
   return (
 
-    <section className=" min-h-screen bg-gradient-to-br from-white-300 to-white-400 py-20 px-6 md:px-12 lg:px-20">
+    <section className=" min-h-screen bg-gradient-to-br from-white-300 to-white-400 pb-20 px-6 md:px-12 lg:px-20">
         
       <motion.div
         initial="hidden"

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import StaffInfoDisplay from "./Staffview";
 import { storeDataInIPFS, retrieveDataFromIPFS, updateDataInIPFS } from "./utils/ipfs";
 import StaffUpdateForm from "./StaffUpdateForm";
+import { toast } from 'react-toastify';
 import Log from "./Log";
 const AdminStaffPage = ({ contract, account }) => {
     const [employeeID, setEmployeeId] = useState("");
     const [staffInfo, setStaffInfo] = useState(null);
+    const [publications, setPublications] = useState([]);
     const [documents, setDocuments] = useState({});
     const [logs, setLogs] = useState([]);
     const [isOpenModal, setIsOpenModal] = useState(false);
@@ -32,17 +34,20 @@ const AdminStaffPage = ({ contract, account }) => {
             const staff = await contract.methods.getStaffByEmployeeID(employeeID).call({ from: account });
             if (staff.wallet !== "0x0000000000000000000000000000000000000000") {
                 const ipfsHash = await retrieveDataFromIPFS(staff.ipfsHash);
+                const publicHash =await retrieveDataFromIPFS(staff.publicHash);
                 const docHash = await retrieveDataFromIPFS(staff.docHash);
 
                 setStaffInfo(ipfsHash || {});
+                setPublications(Array.isArray(publicHash) ? publicHash : []);
                 setDocuments(docHash || {});
+                toast.success("Staff details fetched successfully.");
             } else {
-                alert("No staff found with this Employee ID.");
+                toast.warning("No staff found with this Employee ID.");
                 setStaffInfo(null);
             }
         } catch (error) {
             console.error("Error fetching staff data:", error);
-            alert("Failed to fetch staff details.");
+            toast.error("Failed to fetch staff details.");
         }
     };
 
@@ -76,8 +81,8 @@ const AdminStaffPage = ({ contract, account }) => {
 
             {staffInfo && (
                 <>
-                    <StaffUpdateForm contract={contract} account={account} staffInfo={staffInfo} documents={documents} isAdmin={isAdmin} />
-                    <StaffInfoDisplay staffInfo={staffInfo} documents={documents} />
+                    <StaffUpdateForm contract={contract} account={account} staffInfo={staffInfo} publications={publications} documents={documents} isAdmin={isAdmin} fetchStaff={fetchStaff} />
+                    <StaffInfoDisplay staffInfo={staffInfo} publications={publications} documents={documents} />
                     <button onClick={() => fetchLogs(staffInfo.wallet)}
                         className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 mt-2" >
                         Get Logs
